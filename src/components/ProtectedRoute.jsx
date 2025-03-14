@@ -1,11 +1,12 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
-// Componente que protege rutas
-const ProtectedRoute = ({ isVerified, children }) => {
-  if (!isVerified) {
-    return <Navigate to="/form" />; // Si no está vrificado, redirige a /form
+const ProtectedRoute = ({ isAuthenticated, children }) => {
+  const location = useLocation();
+  if (!isAuthenticated) {
+    return <Navigate to="/form" replace />;
   }
-  return children; // Si está verificado, muestra el contenido
+
+  return children;
 };
 
 export default ProtectedRoute;

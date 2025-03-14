@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,7 +10,14 @@ import HomePage from "./views/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar autenticación
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("isAuthenticated") === "true"
+  );
+
+  // Guardar en localStorage cada vez que cambia isAuthenticated
+  useEffect(() => {
+    localStorage.setItem("isAuthenticated", isAuthenticated);
+  }, [isAuthenticated]);
 
   return (
     <Router>
@@ -29,7 +36,7 @@ const App = () => {
           path="/home"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <HomePage />
+              <HomePage setIsAuthenticated={setIsAuthenticated} />
             </ProtectedRoute>
           }
         />

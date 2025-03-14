@@ -36,10 +36,8 @@ export const validateEmail = (email) => {
 };
 
 export const validateBirthdate = (birthdate) => {
-    // Lógica para validar la fecha de nacimiento (por ejemplo, formato o edad)
-    return true; // Placeholder
 
-  // if (!birthdate) return false;
+  if (!birthdate) return false;
 
   // const birthDateObj = new Date(birthdate);
   // const today = new Date();

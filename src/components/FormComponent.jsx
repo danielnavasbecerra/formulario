@@ -52,6 +52,8 @@ const FormComponent = ({ setIsAuthenticated }) => {
 
       if (userExists) {
         setIsAuthenticated(true); // Habilita el acceso a /home
+        localStorage.setItem("isAuthenticated", "true"); // Persistencia de autenticación
+        console.log("Autenticado, redirigiendo...");
         navigate("/home"); // Redirige al usuario a la página principal
       } else {
         setErrors({
@@ -80,8 +82,12 @@ const FormComponent = ({ setIsAuthenticated }) => {
         <option value="nuip">NUIP</option>
         <option value="pasaporte">Pasaporte</option>
         <option value="permiso_especial">Permiso especial</option>
-        <option value="permiso_temporal_proteccion">Permiso temporal de protección</option>
-        <option value="salvoconducto_permanencia">Salvo conducto de permanencia</option>
+        <option value="permiso_temporal_proteccion">
+          Permiso temporal de protección
+        </option>
+        <option value="salvoconducto_permanencia">
+          Salvo conducto de permanencia
+        </option>
       </select>
       {errors.documentType && <p>{errors.documentType}</p>}
 
