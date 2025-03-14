@@ -6,35 +6,56 @@ import {
   validateEmail,
   validateBirthdate,
 } from "../models/validation";
+
 export const validateFormData = async (formData) => {
   const errors = {};
+
   if (!validateDocumentType(formData.documentType)) {
-    errors.documentType = "Tipo de documento es requerido";
+    errors.documentType = "Debe seleccionar un tipo de documento.";
   }
-  if (!validateDocumentNumber(formData.documentNumber)) {
-    errors.documentNumber = "Número de documento no válido";
+
+  if (!validateDocumentNumber(formData.documentNumber, formData.documentType)) {
+    errors.documentNumber = "Número de documento inválido para el tipo seleccionado.";
   }
+
   if (!validateCellphone(formData.cellphone)) {
-    errors.cellphone = "Número de celular no válido";
+    errors.cellphone = "Número de celular inválido. Debe ser un número de 10 dígitos.";
   }
+
   if (!validateEmail(formData.email)) {
-    errors.email = "Email no es válido";
+    errors.email = "Formato de email incorrecto.";
   }
-  if (!validateBirthdate(formData.birthdate)) {
-    errors.birthdate = "Fecha de nacimiento no válida";
-  }
+
   if (Object.keys(errors).length > 0) {
     return { isValid: false, errors };
   }
-  const serverData = await fetchData();
-  // Compara formData con serverData para validar si hay discrepancias
-  // Ejemplo simple:
-  const exists = serverData.some(
-    (item) => item.documentNumber === formData.documentNumber
-  );
-  if (exists) {
-    errors.documentNumber = "El número de documento ya está registrado";
-    return { isValid: false, errors };
+
+  try {
+    const serverData = await fetchData();
+
+    // Verificar si los datos ingresados coinciden con algún registro en el servidor
+    const match = serverData.find(
+      (item) =>
+        item.documentType === formData.documentType &&
+        item.documentNumber === formData.documentNumber &&
+        item.cellphone === formData.cellphone &&
+        item.email === formData.email &&
+        item.birthdate === formData.birthdate
+    );
+
+    if (!match) {
+      return {
+        isValid: false,
+        errors: { general: "Los datos no coinciden con ningún registro." },
+      };
+    }
+  } catch (error) {
+    console.error("Error al obtener datos del servidor:", error);
+    return {
+      isValid: false,
+      errors: { server: "Error en la validación. Intenta más tarde." },
+    };
   }
+
   return { isValid: true };
 };

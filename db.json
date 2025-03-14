@@ -4,9 +4,73 @@
       "id": 1,
       "documentType": "cc",
       "documentNumber": "123456789",
-      "cellphone": "3001234567",
-      "email": "test@example.com",
-      "birthdate": "1990-01-01"
+      "cellphone": "3101234567",
+      "email": "juan.perez@example.com",
+      "birthdate": "1990-05-20"
+    },
+    {
+      "id": 2,
+      "documentType": "ce",
+      "documentNumber": "987654321",
+      "cellphone": "3229876543",
+      "email": "maria.gomez@example.com",
+      "birthdate": "1985-11-15"
+    },
+    {
+      "id": 3,
+      "documentType": "pasaporte",
+      "documentNumber": "AB12345",
+      "cellphone": "3006547890",
+      "email": "carlos.romero@example.com",
+      "birthdate": "2000-08-10"
+    },
+    {
+      "id": 4,
+      "documentType": "nit",
+      "documentNumber": "900123456",
+      "cellphone": "3124567890",
+      "email": "empresa.sas@example.com",
+      "birthdate": "1995-02-25"
+    },
+    {
+      "id": 5,
+      "documentType": "nuip",
+      "documentNumber": "1002003004",
+      "cellphone": "3159871234",
+      "email": "andres.morales@example.com",
+      "birthdate": "1998-06-30"
+    },
+    {
+      "id": 6,
+      "documentType": "permiso_especial",
+      "documentNumber": "PE-123456",
+      "cellphone": "3201122334",
+      "email": "luis.alvarez@example.com",
+      "birthdate": "1993-09-05"
+    },
+    {
+      "id": 7,
+      "documentType": "permiso_temporal_proteccion",
+      "documentNumber": "PTP-987654",
+      "cellphone": "3235566778",
+      "email": "diana.rojas@example.com",
+      "birthdate": "1987-12-12"
+    },
+    {
+      "id": 8,
+      "documentType": "salvoconducto_permanencia",
+      "documentNumber": "SP-543210",
+      "cellphone": "3198899001",
+      "email": "sebastian.mendoza@example.com",
+      "birthdate": "1991-04-18"
+    },
+    {
+      "id": 9,
+      "documentType": "carnet_diplomatico",
+      "documentNumber": "CD-678901",
+      "cellphone": "3186677889",
+      "email": "embajador.lopez@example.com",
+      "birthdate": "1982-07-22"
     }
   ]
 }
