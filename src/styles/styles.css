@@ -1,0 +1,17 @@
+body {
+  font-family: Arial, sans-serif;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  margin: auto;
+}
+input,
+select {
+  margin: 10px 0;
+}
+p {
+  color: red;
+  font-size: 0.8em;
+}

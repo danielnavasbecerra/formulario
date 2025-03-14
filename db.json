@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "documentType": "cc",
+      "documentNumber": "123456789",
+      "cellphone": "3001234567",
+      "email": "test@example.com",
+      "birthdate": "1990-01-01"
+    }
+  ]
+}
