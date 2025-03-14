@@ -26,6 +26,10 @@ export const validateFormData = async (formData) => {
     errors.email = "Formato de email incorrecto.";
   }
 
+  if (!validateBirthdate(formData.birthdate)) {
+    errors.birthdate = "Fecha de nacimiento no válida";
+  }
+
   if (Object.keys(errors).length > 0) {
     return { isValid: false, errors };
   }

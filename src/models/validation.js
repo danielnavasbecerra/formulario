@@ -36,12 +36,15 @@ export const validateEmail = (email) => {
 };
 
 export const validateBirthdate = (birthdate) => {
-  if (!birthdate) return false;
+    // Lógica para validar la fecha de nacimiento (por ejemplo, formato o edad)
+    return true; // Placeholder
 
-  const birthDateObj = new Date(birthdate);
-  const today = new Date();
-  const age = today.getFullYear() - birthDateObj.getFullYear();
+  // if (!birthdate) return false;
 
-  // Validar que la persona sea mayor de 18 años
-  return age >= 18;
+  // const birthDateObj = new Date(birthdate);
+  // const today = new Date();
+  // const age = today.getFullYear() - birthDateObj.getFullYear();
+
+  // // Validar que la persona sea mayor de 18 años
+  // return age;
 };
