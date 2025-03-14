@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../services/api";
-import "../styles/styles.css"; // Asegúrate de agregar estilos
-const FormComponent = () => {
+
+const FormComponent = ({ setIsAuthenticated }) => {
   const [formData, setFormData] = useState({
     documentType: "",
     documentNumber: "",
@@ -12,33 +12,32 @@ const FormComponent = () => {
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = {};
-    // Validaciones locales
-    if (!formData.documentType) {
+
+    // Validaciones básicas
+    if (!formData.documentType)
       validationErrors.documentType = "Tipo de documento es requerido";
-    }
-    if (!formData.documentNumber) {
+    if (!formData.documentNumber)
       validationErrors.documentNumber = "Número de documento es requerido";
-    }
-    if (!formData.cellphone) {
+    if (!formData.cellphone)
       validationErrors.cellphone = "Número de celular es requerido";
-    }
-    if (!formData.email) {
-      validationErrors.email = "Email es requerido";
-    }
-    if (!formData.birthdate) {
+    if (!formData.email) validationErrors.email = "Email es requerido";
+    if (!formData.birthdate)
       validationErrors.birthdate = "Fecha de nacimiento es requerida";
-    }
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
+
     // Verificar datos con el servidor
     try {
       const serverData = await fetchData();
@@ -50,12 +49,13 @@ const FormComponent = () => {
           user.email === formData.email &&
           user.birthdate === formData.birthdate
       );
+
       if (userExists) {
-        navigate("/"); // Redirigir a la página principal si hay
-        coincidencias;
+        setIsAuthenticated(true); // Habilita el acceso a /home
+        navigate("/home"); // Redirige al usuario a la página principal
       } else {
         setErrors({
-          form: "No se encontraron coincidencias con los datos ingresados.",
+          form: "No se encontraron coincidencias, Verifica si los datos ingresados son correctos.",
         });
       }
     } catch (error) {
@@ -63,6 +63,7 @@ const FormComponent = () => {
       console.error(error);
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="documentType">Tipo de documento</label>
@@ -71,10 +72,16 @@ const FormComponent = () => {
         value={formData.documentType}
         onChange={handleChange}
       >
-        <option value="">Seleccione tipo de documento</option>
-        <option value="cc">Cédula de Ciudadanía</option>
-        <option value="ti">Tarjeta de Identidad</option>
+        <option value="">Selecciona ...</option>
+        <option value="carnet_diplomatico">Carnet diplomático</option>
+        <option value="cc">Cédula de ciudadanía</option>
+        <option value="ce">Cédula de extranjería</option>
+        <option value="nit">NIT</option>
+        <option value="nuip">NUIP</option>
         <option value="pasaporte">Pasaporte</option>
+        <option value="permiso_especial">Permiso especial</option>
+        <option value="permiso_temporal_proteccion">Permiso temporal de protección</option>
+        <option value="salvoconducto_permanencia">Salvo conducto de permanencia</option>
       </select>
       {errors.documentType && <p>{errors.documentType}</p>}
 
@@ -108,4 +115,5 @@ const FormComponent = () => {
     </form>
   );
 };
+
 export default FormComponent;
