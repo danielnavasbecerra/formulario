@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchData } from "../services/api";
+import { validateFormData } from "../controllers/formController";
+import {
+  validateDocumentType,
+  validateDocumentNumber,
+  validateCellphone,
+  validateEmail,
+  validateBirthdate,
+} from "../models/validation";
 
 const FormComponent = ({ setIsAuthenticated }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +17,7 @@ const FormComponent = ({ setIsAuthenticated }) => {
     email: "",
     birthdate: "",
   });
+
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -18,51 +26,45 @@ const FormComponent = ({ setIsAuthenticated }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    let error = "";
+
+    switch (name) {
+      case "documentType":
+        if (!validateDocumentType(value))
+          error = "Debe seleccionar un tipo de documento.";
+        break;
+      case "documentNumber":
+        if (!validateDocumentNumber(value, formData.documentType))
+          error = "Número de Documento inválido.";
+        break;
+      case "cellphone":
+        if (!validateCellphone(value)) error = "Número de Celular inválido.";
+        break;
+      case "email":
+        if (!validateEmail(value)) error = "Correo electrónico inválido.";
+        break;
+      case "birthdate":
+        if (!validateBirthdate(value)) error = "Debe ser mayor de 18 años.";
+        break;
+      default:
+        break;
+    }
+    setErrors((prev) => ({ ...prev, [name]: error || undefined }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = {};
+    setErrors({});
 
-    // Validaciones básicas
-    if (!formData.documentType)
-      validationErrors.documentType = "Tipo de documento es requerido";
-    if (!formData.documentNumber)
-      validationErrors.documentNumber = "Número de documento es requerido";
-    if (!formData.cellphone)
-      validationErrors.cellphone = "Número de celular es requerido";
-    if (!formData.email) validationErrors.email = "Email es requerido";
-    if (!formData.birthdate)
-      validationErrors.birthdate = "Fecha de nacimiento es requerida";
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    // Verificar datos con el servidor
-    try {
-      const serverData = await fetchData();
-      const userExists = serverData.some(
-        (user) =>
-          user.documentType === formData.documentType &&
-          user.documentNumber === formData.documentNumber &&
-          user.cellphone === formData.cellphone &&
-          user.email === formData.email &&
-          user.birthdate === formData.birthdate
-      );
-
-      if (userExists) {
-        setIsAuthenticated(true); // Habilita el acceso a /home
-        localStorage.setItem("isAuthenticated", "true"); // Persistencia de autenticación
-        console.log("Autenticado, redirigiendo...");
-        navigate("/home"); // Redirige al usuario a la página principal
-      } else {
-        setErrors({
-          form: "No se encontraron coincidencias, Verifica si los datos ingresados son correctos.",
-        });
-      }
-    } catch (error) {
-      setErrors({ form: "Error al consultar los datos." });
-      console.error(error);
+    const result = await validateFormData(formData);
+    if (!result.isValid) {
+      setErrors(result.errors);
+    } else {
+      setIsAuthenticated(true);
+      localStorage.setItem("isAuthenticated", "true");
+      navigate("/home");
     }
   };
 
@@ -73,6 +75,7 @@ const FormComponent = ({ setIsAuthenticated }) => {
         name="documentType"
         value={formData.documentType}
         onChange={handleChange}
+        onBlur={handleBlur}
       >
         <option value="">Selecciona ...</option>
         <option value="carnet_diplomatico">Carnet diplomático</option>
@@ -96,11 +99,17 @@ const FormComponent = ({ setIsAuthenticated }) => {
         name="documentNumber"
         placeholder="Número de documento"
         onChange={handleChange}
+        onBlur={handleBlur}
       />
       {errors.documentNumber && <p>{errors.documentNumber}</p>}
 
       <label htmlFor="cellphone">Celular</label>
-      <input name="cellphone" placeholder="Celular" onChange={handleChange} />
+      <input
+        name="cellphone"
+        placeholder="Celular"
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
       {errors.cellphone && <p>{errors.cellphone}</p>}
 
       <label htmlFor="email">Correo electrónico</label>
@@ -108,11 +117,17 @@ const FormComponent = ({ setIsAuthenticated }) => {
         name="email"
         placeholder="Correo electrónico"
         onChange={handleChange}
+        onBlur={handleBlur}
       />
       {errors.email && <p>{errors.email}</p>}
 
       <label htmlFor="birthdate">Fecha de nacimiento</label>
-      <input name="birthdate" type="date" onChange={handleChange} />
+      <input
+        name="birthdate"
+        type="date"
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
       {errors.birthdate && <p>{errors.birthdate}</p>}
 
       {errors.form && <p className="error">{errors.form}</p>}

@@ -39,10 +39,10 @@ export const validateBirthdate = (birthdate) => {
 
   if (!birthdate) return false;
 
-  // const birthDateObj = new Date(birthdate);
-  // const today = new Date();
-  // const age = today.getFullYear() - birthDateObj.getFullYear();
+  const birthDate = new Date(birthdate);
+  const today = new Date();
+  const age = today.getFullYear() - birthDate.getFullYear();
 
-  // // Validar que la persona sea mayor de 18 años
-  // return age;
+  // Validar que la persona sea mayor de 18 años
+  return age >= 18;
 };
